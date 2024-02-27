@@ -1,14 +1,11 @@
 const managerDetails = document.querySelector(".grid-container").children;
-//checking trial 1
 try {
   [...managerDetails].forEach(function(element, index) {
     element.querySelector(".insidetext").textContent = manager[index];
   });
 } catch (e) {
-  //Ignore error as we don't have the function yet
 }
 
-//checking trial 2
 const defenders = document.querySelector(".defence");
 const midfielders = document.querySelector(".midfield");
 const forwards = document.querySelector(".forward");
@@ -24,10 +21,8 @@ try {
     forwards.innerHTML += `<img src="./assets/player.svg" alt="" class="defenders"></img>`;
   }
 } catch (e) {
-  //Ignore error as we don't have the function yet
 }
 
-//populate all players
 const playerContainer = document.getElementById("player-container");
 
 function createCards(players) {
@@ -78,7 +73,7 @@ function createCards(players) {
   });
 }
 
-function resetselection() {
+function reset() {
   document.getElementById("awardflag").textContent = "";
   document.getElementById("positionflag").textContent = "";
   document.getElementById("debutflag").textContent = "";
@@ -95,7 +90,6 @@ function resetselection() {
     .classList.remove("filtertype-active");
 }
 
-//setup filter and sort menu
 document.querySelector(
   ".filter-container"
 ).firstElementChild.onclick = filtermenusetup;
@@ -104,18 +98,13 @@ function filtermenusetup(evt) {
   createCards([]);
 
   try {
-    //deactivate the class filtertype-active for any selected buttons
     resetselection();
   } catch (e) {
-    //do nothing
   }
   this.classList.add("filtertype-active");
-  //display filtermenu
   document.getElementById("filter-type").style.display = "inherit";
 }
 
-//populate filter elements
-//all player positions
 const positions = [...new Set(players.map(e => e.position))].sort();
 positions.forEach(
   e =>
@@ -123,66 +112,53 @@ positions.forEach(
       '<p class="position">' + e + "</p>")
 );
 
-//position clickhandler and listener
 
 let positionEls = document.querySelectorAll(".position");
 positionEls.forEach(element => {
-  element.onclick = positionHandler;
+  element.onclick = posh;
 });
 
-function positionHandler(evt) {
+function posh(evt) {
   try {
     createCards(filterByPosition(evt.target.innerHTML));
     try {
-      //deactivate the class filtertype-active for any selected buttons
       resetselection();
     } catch (e) {
-      //do nothing
     }
-    //activate the class filtertype-active for position button
     evt.target.parentElement.previousSibling.classList.add("filtertype-active");
     document.getElementById("positionflag").textContent =
       evt.target.textContent;
   } catch (e) {
-    //do nothing as the function is not defined
   }
 }
 
-//all debut years (sorted)
 const debutYears = [...new Set(players.map(e => e.debut))].sort();
 debutYears.forEach(e => {
   document.querySelector("#dropdown-debut").innerHTML +=
     '<p class="year">' + e + "</p>";
 });
 
-//debut year click listener and handler
 
 let debutYearEls = document.getElementsByClassName("year");
 
 [...debutYearEls].forEach(element => {
-  element.onclick = debutHandler;
+  element.onclick = debh;
 });
 
-function debutHandler(evt) {
+function debh(evt) {
   try {
     createCards(filterByDebut(evt.target.textContent));
     try {
-      //deactivate the class filtertype-active for any selected buttons
       resetselection();
     } catch (e) {
-      //do nothing
     }
-    //activate the class filtertype-active for position button
     evt.target.parentElement.previousSibling.classList.add("filtertype-active");
     document.getElementById("debutflag").textContent = evt.target.textContent;
   } catch (e) {
-    //do nothing - expected error
   }
 }
 
-//all awards won (sorted)
 const awards = [...new Set(players.map(e => e.awards))];
-// //max no of awards won by any player
 var maxAwardCount = 0;
 const awardNames = [];
 players.forEach(e => {
@@ -199,15 +175,13 @@ awardNames.forEach(
       '<p class="award">' + e + "</p>")
 );
 
-//award click listener
 
 let awardEls = document.getElementsByClassName("award");
 
 [...awardEls].forEach(element => {
-  element.onclick = awardHandler;
+  element.onclick = ah;
 });
 
-//advanced filters based on award
 
 function createAdvancedFilters(award) {
   document.querySelectorAll(".award-selected").forEach(e => {
@@ -215,43 +189,35 @@ function createAdvancedFilters(award) {
   });
 }
 
-// award click handler
-function awardHandler(evt) {
+function ah(evt) {
   try {
     createCards(filterByAward(evt.target.textContent));
     try {
-      //deactivate the class filtertype-active for any selected buttons
       resetselection();
     } catch (e) {
-      //do nothing
     }
-    //activate the class filtertype-active for position button
     evt.target.parentElement.previousElementSibling.classList.add(
       "filtertype-active"
     );
     createAdvancedFilters(evt.target.textContent);
     document.getElementById("awardflag").textContent = evt.target.textContent;
   } catch (e) {
-    //do nothing - expected error
   }
 }
 
-//number of awards listener and handler
 
-document.getElementById("awardCount").oninput = awardCountHandler;
+document.getElementById("awardCount").oninput = ach;
 
-function awardCountHandler(evt) {
+function ach(evt) {
   try {
     let award = document.getElementById("awardflag").textContent;
     let timesInput = evt.target;
     let times = timesInput.value;
     createCards(filterByAwardxTimes(award, times));
   } catch (e) {
-    //do nothing
   }
 }
 
-//all player countries
 const countries = [...new Set(players.map(e => e.country))].sort();
 countries.forEach(
   e =>
@@ -259,36 +225,30 @@ countries.forEach(
       "<p>" + e + "</p>")
 );
 
-// country listener and handler
 
-document.getElementById("dropdown-country").onclick = countryHandler;
-function countryHandler(evt) {
+document.getElementById("dropdown-country").onclick = countryh;
+function countryh(evt) {
   try {
     let award = document.getElementById("awardflag").textContent;
     let country = evt.target.textContent;
     createCards(filterByAwardxCountry(award, country));
   } catch (e) {
-    //do nothing
   }
 }
 
-//all player teams
 const teams = [...new Set(players.map(e => e.team))].sort();
 teams.forEach(
   e =>
     (document.querySelector("#dropdown-team").innerHTML += "<p>" + e + "</p>")
 );
 
-//teams listener and handler
-document.getElementById("dropdown-team").onclick = teamHandler;
+document.getElementById("dropdown-team").onclick = teamh;
 
-function teamHandler(evt) {
+function teamh(evt) {
   createCards([]);
   try {
     resetselection();
-    // createCards(filterByNoOfAwardsxTeamxAge(noOfAwards, team, age));
   } catch (e) {
-    //do nothing
   }
   document.querySelectorAll(".team-selected").forEach(e => {
     e.style.display = "block";
@@ -298,9 +258,9 @@ function teamHandler(evt) {
   );
   document.getElementById("teamflag").textContent = evt.target.textContent;
 
-  document.getElementById("goButton").onclick = goButtonHandler;
+  document.getElementById("goButton").onclick = gobtn;
 
-  function goButtonHandler() {
+  function gobtn() {
     try {
       awardsTotal = document.getElementById("awardCountTotal");
       noOfAwards = awardsTotal.value;
@@ -315,9 +275,9 @@ function teamHandler(evt) {
 }
 
 let sortButtons = document.getElementById("sort-type").children;
-sortButtons.onclick = sortButtonHandler;
+sortButtons.onclick = sortbtn;
 
-function sortButtonHandler(evt) {
+function sortbtn(evt) {
   switch (evt.target.textContent) {
     case "Oldest to Newest":
       createCards(sortByAge());
@@ -328,11 +288,3 @@ function sortButtonHandler(evt) {
     case "Alphabetical x Award Sort":
   }
 }
-
-//max and min age among players (for age slider)
-// var minAge = 100;
-// var maxAge = 0;
-// players.forEach(e => {
-//   minAge = minAge > e.age ? e.age : minAge;
-//   maxAge = maxAge < e.age ? e.age : maxAge;
-// });
